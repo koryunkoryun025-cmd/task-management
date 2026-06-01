@@ -1,6 +1,7 @@
 package com.marv.taskmanagement.servise.impl;
 
 import com.marv.taskmanagement.exceptions.ResourceNotFoundException;
+import com.marv.taskmanagement.mapper.TaskMapper;
 import com.marv.taskmanagement.model.dto.request.CreateTaskRequest;
 import com.marv.taskmanagement.model.dto.request.UpdateTaskRequest;
 import com.marv.taskmanagement.model.dto.response.TaskResponse;
@@ -8,7 +9,6 @@ import com.marv.taskmanagement.model.entity.TaskEntity;
 import com.marv.taskmanagement.repository.TaskRepository;
 import com.marv.taskmanagement.servise.TaskService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +19,14 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     @Transactional
     @Override
     public TaskResponse create(CreateTaskRequest request) {
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setTitle(request.getTitle());
-        taskEntity.setDescription(request.getDescription());
-        taskEntity.setDeadline(request.getDeadline());
-
+        TaskEntity taskEntity = taskMapper.toEntity(request);
         TaskEntity saved = taskRepository.save(taskEntity);
-        return new TaskResponse(saved);
+        return taskMapper.toResponse(saved);
     }
 
     @Transactional(readOnly = true)
@@ -37,7 +34,7 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> getAll() {
         return taskRepository.findAll()
                 .stream()
-                .map(TaskResponse::new)
+                .map(taskMapper::toResponse)
                 .toList();
     }
 
@@ -46,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse getById(Long id) {
         TaskEntity taskEntity = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
-        return new TaskResponse(taskEntity);
+        return taskMapper.toResponse(taskEntity);
     }
 
     @Transactional
@@ -61,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
         existing.setDeadline(request.getDeadline());
 
         TaskEntity saved = taskRepository.save(existing);
-        return new TaskResponse(saved);
+        return taskMapper.toResponse((saved));
     }
 
     @Transactional
