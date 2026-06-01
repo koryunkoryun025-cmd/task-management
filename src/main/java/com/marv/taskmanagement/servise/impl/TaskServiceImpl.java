@@ -10,6 +10,7 @@ import com.marv.taskmanagement.servise.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    @Transactional
     @Override
     public TaskResponse create(CreateTaskRequest request) {
         TaskEntity taskEntity = new TaskEntity();
@@ -30,6 +32,7 @@ public class TaskServiceImpl implements TaskService {
         return new TaskResponse(saved);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<TaskResponse> getAll() {
         return taskRepository.findAll()
@@ -38,6 +41,7 @@ public class TaskServiceImpl implements TaskService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public TaskResponse getById(Long id) {
         TaskEntity taskEntity = taskRepository.findById(id)
@@ -45,6 +49,7 @@ public class TaskServiceImpl implements TaskService {
         return new TaskResponse(taskEntity);
     }
 
+    @Transactional
     @Override
     public TaskResponse update(Long id, UpdateTaskRequest request) {
         TaskEntity existing = taskRepository.findById(id)
@@ -59,6 +64,7 @@ public class TaskServiceImpl implements TaskService {
         return new TaskResponse(saved);
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
         taskRepository.findById(id)
