@@ -1,0 +1,5 @@
+Controller - accepts request (принимает request)
+Service - contains business logic (содержит бизнес-логику)
+Repository - works with database (работает с database)
+Entity - table in java object (таблица в Java-объекте)
+DTO - object for request/response (объект для request/response)
