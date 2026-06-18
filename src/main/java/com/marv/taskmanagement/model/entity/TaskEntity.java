@@ -24,7 +24,7 @@ public class TaskEntity {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.TODO;
 
     private LocalDate deadline;
 }
