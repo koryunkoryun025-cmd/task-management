@@ -4,6 +4,7 @@ import com.marv.taskmanagement.model.dto.request.CreateTaskRequest;
 import com.marv.taskmanagement.model.dto.request.UpdateTaskRequest;
 import com.marv.taskmanagement.model.dto.response.PageResponse;
 import com.marv.taskmanagement.model.dto.response.TaskResponse;
+import com.marv.taskmanagement.model.enums.TaskStatus;
 import com.marv.taskmanagement.servise.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +34,12 @@ public class TaskController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "DESC") String sortDirection
+            @RequestParam(defaultValue = "DESC") String sortDirection,
+            @RequestParam(required = false) TaskStatus status
     ) {
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return ResponseEntity.ok(new PageResponse<>(taskService.getAll(pageable)));
+        return ResponseEntity.ok(new PageResponse<>(taskService.getAll(status, pageable)));
     }
 
     @GetMapping("/{id}")

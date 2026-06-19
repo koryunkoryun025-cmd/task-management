@@ -6,6 +6,7 @@ import com.marv.taskmanagement.model.dto.request.CreateTaskRequest;
 import com.marv.taskmanagement.model.dto.request.UpdateTaskRequest;
 import com.marv.taskmanagement.model.dto.response.TaskResponse;
 import com.marv.taskmanagement.model.entity.TaskEntity;
+import com.marv.taskmanagement.model.enums.TaskStatus;
 import com.marv.taskmanagement.repository.TaskRepository;
 import com.marv.taskmanagement.servise.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<TaskResponse> getAll(Pageable pageable) {
+    public Page<TaskResponse> getAll(TaskStatus status, Pageable pageable) {
+        if (status != null) {
+            return taskRepository.findByStatus(status, pageable)
+                    .map(taskMapper:: toResponse);
+        }
         return taskRepository.findAll(pageable)
                 .map(taskMapper::toResponse);
     }
