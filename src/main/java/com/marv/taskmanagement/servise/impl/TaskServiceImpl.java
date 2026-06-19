@@ -9,6 +9,8 @@ import com.marv.taskmanagement.model.entity.TaskEntity;
 import com.marv.taskmanagement.repository.TaskRepository;
 import com.marv.taskmanagement.servise.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +33,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TaskResponse> getAll() {
-        return taskRepository.findAll()
-                .stream()
-                .map(taskMapper::toResponse)
-                .toList();
+    public Page<TaskResponse> getAll(Pageable pageable) {
+        return taskRepository.findAll(pageable)
+                .map(taskMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +50,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse update(Long id, UpdateTaskRequest request) {
         TaskEntity existing = taskRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
 
         existing.setTitle(request.getTitle());
         existing.setDescription(request.getDescription());

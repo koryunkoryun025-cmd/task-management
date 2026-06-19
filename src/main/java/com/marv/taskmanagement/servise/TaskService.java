@@ -3,6 +3,8 @@ package com.marv.taskmanagement.servise;
 import com.marv.taskmanagement.model.dto.request.CreateTaskRequest;
 import com.marv.taskmanagement.model.dto.request.UpdateTaskRequest;
 import com.marv.taskmanagement.model.dto.response.TaskResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -10,7 +12,7 @@ public interface TaskService {
 
     TaskResponse create(CreateTaskRequest request);
 
-    List<TaskResponse> getAll();
+    Page<TaskResponse> getAll(Pageable pageable);
 
     TaskResponse getById(Long id);
 
