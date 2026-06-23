@@ -27,4 +27,8 @@ public class TaskEntity {
     private TaskStatus status = TaskStatus.TODO;
 
     private LocalDate deadline;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }
