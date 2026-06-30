@@ -1,5 +1,6 @@
 package com.marv.taskmanagement.servise.impl;
 
+import com.marv.taskmanagement.constants.ErrorMessages;
 import com.marv.taskmanagement.exceptions.ResourceNotFoundException;
 import com.marv.taskmanagement.model.dto.request.LoginRequest;
 import com.marv.taskmanagement.model.dto.request.RegisterRequest;
@@ -29,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username already exists: " + request.getUsername());
+            throw new IllegalArgumentException(ErrorMessages.USERNAME_ALREADY_EXISTS + request.getUsername());
         }
 
         UserEntity user = new UserEntity();
@@ -54,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         UserEntity user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + request.getUsername()));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USER_NOT_FOUND + ": " + request.getUsername()));
 
         String token = jwtService.generateToken(user);
 

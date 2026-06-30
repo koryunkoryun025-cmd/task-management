@@ -1,5 +1,6 @@
 package com.marv.taskmanagement.config;
 
+import com.marv.taskmanagement.constants.ErrorMessages;
 import com.marv.taskmanagement.repository.UserRepository;
 import com.marv.taskmanagement.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorMessages.USER_NOT_FOUND + ": " + username));
     }
 
     @Bean

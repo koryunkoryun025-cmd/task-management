@@ -1,5 +1,6 @@
 package com.marv.taskmanagement.servise.impl;
 
+import com.marv.taskmanagement.constants.ErrorMessages;
 import com.marv.taskmanagement.exceptions.ResourceNotFoundException;
 import com.marv.taskmanagement.mapper.TaskMapper;
 import com.marv.taskmanagement.model.dto.request.CreateTaskRequest;
@@ -35,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
                 .getAuthentication()
                 .getName();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USER_NOT_FOUND));
     }
 
     @Transactional
@@ -64,10 +65,10 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse getById(Long id) {
         UserEntity currentUser = getCurrentUser();
         TaskEntity taskEntity = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.TASK_NOT_FOUND + id));
 
         if (!taskEntity.getUser().getId().equals(currentUser.getId())) {
-            throw  new ResourceNotFoundException("Task not found with id: " + id);
+            throw  new ResourceNotFoundException(ErrorMessages.TASK_NOT_FOUND + id);
         }
         return taskMapper.toResponse(taskEntity);
     }
@@ -77,10 +78,10 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse update(Long id, UpdateTaskRequest request) {
         UserEntity currentUser = getCurrentUser();
         TaskEntity existing = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.TASK_NOT_FOUND + id));
 
         if (!existing.getUser().getId().equals(currentUser.getId())) {
-            throw new ResourceNotFoundException("Task not found with id: " + id);
+            throw new ResourceNotFoundException(ErrorMessages.TASK_NOT_FOUND + id);
         }
 
         existing.setTitle(request.getTitle());
@@ -97,10 +98,10 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long id) {
         UserEntity currentUser = getCurrentUser();
         TaskEntity taskEntity = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.TASK_NOT_FOUND + id));
 
         if (!taskEntity.getUser().getId().equals(currentUser.getId())) {
-            throw new ResourceNotFoundException("Task not found with id: " + id);
+            throw new ResourceNotFoundException(ErrorMessages.TASK_NOT_FOUND + id);
         }
         taskRepository.deleteById(id);
     }
