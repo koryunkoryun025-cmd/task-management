@@ -3,11 +3,13 @@ package com.marv.taskmanagement.model.dto.request;
 import com.marv.taskmanagement.model.enums.TaskStatus;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
+@Builder
 public class UpdateTaskRequest {
 
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")

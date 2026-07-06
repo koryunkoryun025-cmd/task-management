@@ -3,11 +3,13 @@ package com.marv.taskmanagement.model.dto.request;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
+@Builder
 public class CreateTaskRequest {
 
     @NotBlank(message = "Title is required")
